@@ -22,15 +22,25 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
-class Greeting(db.Model):
-  author = db.UserProperty()
-  content = db.StringProperty(multiline=True)
-  date = db.DateTimeProperty(auto_now_add=True)
+class Task(db.Model):
+  creator = db.UserProperty(auto_current_user_add=True)
+  creation = db.DateTimeProperty(auto_now_add=True)
+  modifier = db.UserProperty(auto_current_user=True)
+  modification = db.DateTimeProperty(auto_now=True)
+  identity = db.IntegerProperty()
+  version = db.IntegerProperty()
+  priority = db.IntegerProperty()
+  title = db.StringProperty(multiline=False)
+  description = db.StringProperty(multiline=True)
+  group = db.SelfReferenceProperty()
+  due_date = db.DateTimeProperty()
+  expectedTimeSpan = db.TimeProperty()
+  is_done = db.BooleanProperty()
 
 class MainPage(webapp.RequestHandler):
   def get(self):
-    greetings_query = Greeting.all().order('-date')
-    greetings = greetings_query.fetch(10)
+    tasks_query = Task.all().order('-modification')
+    tasks = tasks_query.fetch(10)
 
     if users.get_current_user():
       url = users.create_logout_url(self.request.uri)
@@ -40,7 +50,7 @@ class MainPage(webapp.RequestHandler):
       url_linktext = 'Login'
 
     template_values = {
-      'greetings': greetings,
+      'tasks': tasks,
       'url': url,
       'url_linktext': url_linktext,
       }
@@ -50,18 +60,15 @@ class MainPage(webapp.RequestHandler):
 
 class Guestbook(webapp.RequestHandler):
   def post(self):
-    greeting = Greeting()
+    task = Task()
 
-    if users.get_current_user():
-      greeting.author = users.get_current_user()
-
-    greeting.content = self.request.get('content')
-    greeting.put()
+    task.description = self.request.get('description')
+    task.put()
     self.redirect('/')
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/sign', Guestbook)],
+                                      ('/add', Guestbook)],
                                      debug=True)
 
 def main():

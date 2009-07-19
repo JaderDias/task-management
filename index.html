@@ -1,23 +1,23 @@
 <html>
   <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<script src="http://www.google.com/jsapi"></script>
   </head>
   <body>
-    {% for greeting in greetings %}
-      {% if greeting.author %}
-        <b>{{ greeting.author.nickname }}</b> wrote:
+    {% for task in tasks %}
+      {% if task.creator %}
+      <b>{{ task.creator.nickname }}</b> wrote in {{ task.creation }}:
       {% else %}
        An anonymous person wrote:
       {% endif %}
-      <blockquote>{{ greeting.content|escape }}</blockquote>
+      <blockquote>{{ task.description|escape }}</blockquote>
     {% endfor %}
 
-    <form action="/sign" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
+    <form action="/add" method="post">
+      <div><textarea name="description" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Add task"></div>
     </form>
 
     <a href="{{ url }}">{{ url_linktext }}</a>
-
   </body>
 </html>

@@ -39,7 +39,7 @@ class Task(db.Model):
 
 class MainPage(webapp.RequestHandler):
   def get(self):
-    tasks_query = Task.all().order('-modification')
+    tasks_query = Task.all().order('priority')
     tasks = tasks_query.fetch(10)
 
     if users.get_current_user():

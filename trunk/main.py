@@ -74,9 +74,17 @@ class Update(webapp.RequestHandler):
     task.put()
     self.response.out.write('0')
 
+class Delete(webapp.RequestHandler):
+  def post(self):
+    key = int(self.request.get('key'))
+    task = Task.get_by_id(key)
+    task.delete()
+    self.response.out.write('0')
+
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/insert', Insert),
+                                      ('/delete', Delete),
                                       ('/update', Update)],
                                      debug=True)
 

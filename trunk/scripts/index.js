@@ -15,15 +15,25 @@ function fillPriority(){
 
 function listenKeystrokes(){
     $(".title").live("keyup", onKeyUp);
+    $(".title").live("keydown", onKeyDown);
 }
 function onKeyUp(event) {
     var input = $(event.target);
     switch (event.keyCode) {
-        case 13:
+        case 13: //enter
             createTask(input);
             break;
     }
     saveModifications(input);
+}
+function onKeyDown(event){
+    var input = $(event.target);
+    switch (event.keyCode) {
+        case 8: //backspace
+            return deletePreviousTask(input);
+        case 46: //delete
+            return deleteNextTask(input);
+    }
 }
 function saveModifications(input) {
     var key = input.siblings(".key").val();
@@ -60,5 +70,37 @@ function createTask(input){
 	}
 	$.post("insert", { "title": text, "priority": priority }, this.createTaskCallback);
 }
-
-
+function deletePreviousTask(input) {
+    var caret = Caret(input);
+    if (caret === 0) {
+        var text = input.val();
+        var previousInput = input.parents(".task").prev().find(".title");
+        deleteTask(input);
+        appendText(previousInput, text);
+        return false;
+    }
+    return true;
+}
+function deleteNextTask(input) {
+    var caret = Caret(input);
+    if (caret === input.val().length) {
+        var nextInput = input.parents(".task").next().find(".title");
+        var nextText = nextInput.val();
+        deleteTask(nextInput);
+        appendText(input, nextText);
+        return false;
+    }
+    return true;
+}
+function deleteTask(input) {
+    var key = input.siblings(".key").val();
+    $.post("delete", { "key": key });
+    var row = input.parents(".task");
+    row.remove();
+}
+function appendText(input, text) {
+    var originalLength = input.val().length;
+    input.val(input.val() + text)
+            .focus();
+    Caret(input, originalLength);
+}

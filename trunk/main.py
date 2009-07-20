@@ -52,23 +52,31 @@ class MainPage(webapp.RequestHandler):
     template_values = {
       'tasks': tasks,
       'url': url,
-      'url_linktext': url_linktext,
+      'url_linktext': url_linktext
       }
 
     path = os.path.join(os.path.dirname(__file__), 'index.html')
     self.response.out.write(template.render(path, template_values))
 
-class Guestbook(webapp.RequestHandler):
+class Insert(webapp.RequestHandler):
   def post(self):
     task = Task()
-
-    task.description = self.request.get('description')
+    task.title = self.request.get('title')
     task.put()
-    self.redirect('/')
+    self.response.out.write('0')
+
+class Update(webapp.RequestHandler):
+  def post(self):
+    key = int(self.request.get('key'))
+    task = Task.get_by_id(key)
+    task.title = self.request.get('title')
+    task.put()
+    self.response.out.write('0')
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/add', Guestbook)],
+                                      ('/insert', Insert),
+                                      ('/update', Update)],
                                      debug=True)
 
 def main():

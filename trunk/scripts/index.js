@@ -18,9 +18,16 @@ function onKeyUp(event) {
 }
 function onKeyDown(event){
     var input = $(event.target);
+    var task = input.parents(".task");
     switch (event.keyCode) {
         case 8: //backspace
             return deletePreviousTask(input);
+        case 38: //up
+            task.prev().find(".title").focus();
+            break;
+        case 40: //down
+            task.next().find(".title").focus();
+            break;
         case 46: //delete
             return deleteNextTask(input);
     }

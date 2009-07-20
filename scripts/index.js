@@ -1,18 +1,8 @@
 /// <reference path="jquery-1.3.2-vsdoc.js" />
 google.load("jquery", "1");
 google.setOnLoadCallback(function() {
-	fillPriority();
 	listenKeystrokes();
 });
-
-function fillPriority(){
-	var counter = 0;
-	$(".priority").each(function() {
-		$(this).val(counter);
-		counter ++;
-	});
-}
-
 function listenKeystrokes(){
     $(".title").live("keyup", onKeyUp);
     $(".title").live("keydown", onKeyDown);
@@ -45,26 +35,31 @@ function createTask(input){
     var priority = parseInt(input.siblings(".priority").val());
     var left = input.val().substring(0, caret);
     var text = input.val().substring(caret);
-    if (left == "")
+    var task = input.parents(".task");
+    var previousPriority = task.prev().find(".priority").val();
+    var nextPriority = task.prev().find(".priority").val();
+    var newTask
+    if (left == "") {
         text = "";
-    else {
+        priority = (priority + previousPriority) / 2;
+        task.before($(".newTask").html());
+        newTask = task.prev();
+    } else {
         input.val(left);
-        priority += 1;
+        priority = (priority + nextPriority) / 2;
+        task.after($(".newTask").html());
+        newTask = task.next();
     }
-	var item = $(".task").eq(priority);
-	item.before($(".newTask").html());
-	var newItem = $(".task").eq(priority);
-	newItem
+	newTask
 	    .find(".title")
 	    .val(text)
 	    .focus();
-	newItem
+	newTask
 	    .find(".priority")
 	    .val(priority);
-	Caret(newItem, 0);
-	fillPriority();
+	Caret(newTask, 0);
 	this.createTaskCallback = function(id) {
-	    newItem
+	    newTask
 	        .find(".key")
 	        .val(id);
 	}

@@ -39,10 +39,11 @@ class Task(db.Model):
 
 class MainPage(webapp.RequestHandler):
   def get(self):
-    tasks_query = Task.all().order('priority')
+    user = users.get_current_user()
+    tasks_query = Task.all().filter("creator =", user).order('priority')
     tasks = tasks_query.fetch(10)
 
-    if users.get_current_user():
+    if user:
       url = users.create_logout_url(self.request.uri)
       url_linktext = 'Logout'
     else:

@@ -63,6 +63,7 @@ class Insert(webapp.RequestHandler):
   def post(self):
     task = Task()
     task.title = self.request.get('title')
+    task.priority = float(self.request.get('priority'))
     task.put()
     self.response.out.write(task.key().id())
 

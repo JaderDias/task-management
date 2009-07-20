@@ -10,7 +10,7 @@
 	{% for task in tasks %}
 		<li class="task">
 		  	<input type="hidden" class="key" value="{{ task.key.id }}" />
-		  	<input type="hidden" class="priority" />
+		  	<input type="hidden" class="priority" value="{{ task.priority }}" />
 			<input type="text" class="title" value="{{ task.title|escape }}" />
 		</li>
 	{% endfor %}

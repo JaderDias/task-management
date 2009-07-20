@@ -42,6 +42,12 @@ class MainPage(webapp.RequestHandler):
     user = users.get_current_user()
     tasks_query = Task.all().filter("creator =", user).order('priority')
     tasks = tasks_query.fetch(1000)
+    if len(tasks) == 0:
+      task = Task()
+      task.title = ''
+      task.priority = 1.
+      task.put()
+      tasks = [ task ]
 
     if user:
       url = users.create_logout_url(self.request.uri)

@@ -14,34 +14,40 @@ function fillPriority(){
 }
 
 function listenKeystrokes(){
-	$("input[type='text']").live("keyup", function(event){
-		var input = $(event.target);
-		var caret = Caret(input);
-		var priority = parseInt(input.prev(".priority").val());
-		switch (event.keyCode) {
-			 case 13:
-			 	var left = input.val().substring(0, caret);
-				var right = input.val().substring(caret);
-				if(left == "")
-				 	createTask(left, priority);
-				else{
-					input.val(left);
-					createTask(right, priority + 1);
-				}
-				break;
-		}
-	});
+    $(".title").live("keyup", onKeyUp);
 }
-
-function createTask(text, priority){
-	var items = $(".task");
-	var item = items.eq(priority);
+function onKeyUp(event) {
+    var input = $(event.target);
+    switch (event.keyCode) {
+        case 13:
+            createTask(input);
+            break;
+    }
+    saveModifications(input);
+}
+function saveModifications(input) {
+    var key = input.siblings(".key").val();
+    var title = input.val();
+    $.post("update", { "key" : key, "title": title });
+}
+function createTask(input){
+    var caret = Caret(input);
+    var priority = parseInt(input.siblings(".priority").val());
+    var left = input.val().substring(0, caret);
+    var text = input.val().substring(caret);
+    if (left == "")
+        text = "";
+    else {
+        input.val(left);
+        priority += 1;
+    }
+    $.post("insert", { "title": text, "priority": priority });
+	var item = $(".task").eq(priority);
 	item.before($(".newTask").html());
-	item = $(".task")
-	    .eq(priority)
-	    .find("input[type='text']")
+	var newItem = $(".task").eq(priority)
+	    .find(".title")
 	    .val(text)
 	    .focus();
-	Caret(item, 0);
+	Caret(newItem, 0);
 	fillPriority();
 }

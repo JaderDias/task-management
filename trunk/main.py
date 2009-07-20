@@ -67,11 +67,14 @@ class MainPage(webapp.RequestHandler):
 
 class Insert(webapp.RequestHandler):
   def post(self):
+    priority = float(self.request.get('priority'))
+    if priority == -1.:
+		priority = Task.all().order('priority').get().priority + 1.
     task = Task()
     task.title = self.request.get('title')
-    task.priority = float(self.request.get('priority'))
+    task.priority = priority
     task.put()
-    self.response.out.write(task.key().id())
+    self.response.out.write('{"key":' + str(task.key().id()) + ',"priority":' + str(priority) + '}')
 
 class Update(webapp.RequestHandler):
   def post(self):

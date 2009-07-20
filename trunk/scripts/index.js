@@ -32,21 +32,27 @@ function saveModifications(input) {
 }
 function createTask(input){
     var caret = Caret(input);
-    var priority = parseInt(input.siblings(".priority").val());
+    var priority = parseFloat(input.siblings(".priority").val());
     var left = input.val().substring(0, caret);
     var text = input.val().substring(caret);
     var task = input.parents(".task");
-    var previousPriority = task.prev().find(".priority").val();
-    var nextPriority = task.prev().find(".priority").val();
     var newTask
     if (left == "") {
         text = "";
-        priority = (priority + previousPriority) / 2;
+        var prevTask = task.prev();
+        if (prevTask.length > 0)
+            priority = calculatePriority(prevTask, priority);
+        else
+            priority /= 2;
         task.before($(".newTask").html());
         newTask = task.prev();
     } else {
         input.val(left);
-        priority = (priority + nextPriority) / 2;
+        var nextTask = task.next();
+        if (nextTask.length > 0)
+            priority = calculatePriority(nextTask, priority);
+        else
+            priority = -1;
         task.after($(".newTask").html());
         newTask = task.next();
     }
@@ -58,12 +64,19 @@ function createTask(input){
 	    .find(".priority")
 	    .val(priority);
 	Caret(newTask, 0);
-	this.createTaskCallback = function(id) {
+	this.createTaskCallback = function(task) {
 	    newTask
-	        .find(".key")
-	        .val(id);
-	}
-	$.post("insert", { "title": text, "priority": priority }, this.createTaskCallback);
+	            .find(".key")
+	            .val(task.key);
+	    newTask
+	            .find(".priority")
+	            .val(task.priority);
+    }
+	$.post("insert", { "title": text, "priority": priority }, this.createTaskCallback, "json");
+}
+function calculatePriority(task, priority) {
+    var nextPriority = parseFloat(task.find(".priority").val());
+    return (priority + nextPriority) / 2;
 }
 function deletePreviousTask(input) {
     var caret = Caret(input);

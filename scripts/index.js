@@ -41,13 +41,24 @@ function createTask(input){
         input.val(left);
         priority += 1;
     }
-    $.post("insert", { "title": text, "priority": priority });
 	var item = $(".task").eq(priority);
 	item.before($(".newTask").html());
-	var newItem = $(".task").eq(priority)
+	var newItem = $(".task").eq(priority);
+	newItem
 	    .find(".title")
 	    .val(text)
 	    .focus();
+	newItem
+	    .find(".priority")
+	    .val(priority);
 	Caret(newItem, 0);
 	fillPriority();
+	this.createTaskCallback = function(id) {
+	    newItem
+	        .find(".key")
+	        .val(id);
+	}
+	$.post("insert", { "title": text, "priority": priority }, this.createTaskCallback);
 }
+
+

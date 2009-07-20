@@ -29,7 +29,7 @@ class Task(db.Model):
   modification = db.DateTimeProperty(auto_now=True)
   identity = db.IntegerProperty()
   version = db.IntegerProperty()
-  priority = db.IntegerProperty()
+  priority = db.FloatProperty()
   title = db.StringProperty(multiline=False)
   description = db.StringProperty(multiline=True)
   group = db.SelfReferenceProperty()
@@ -63,7 +63,7 @@ class Insert(webapp.RequestHandler):
     task = Task()
     task.title = self.request.get('title')
     task.put()
-    self.response.out.write('0')
+    self.response.out.write(task.key().id())
 
 class Update(webapp.RequestHandler):
   def post(self):

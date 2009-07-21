@@ -1,9 +1,9 @@
 /// <reference path="jquery-1.3.2-vsdoc.js" />
 google.load("jquery", "1");
 google.setOnLoadCallback(function() {
-	listenKeystrokes();
+    listenKeystrokes();
 });
-function listenKeystrokes(){
+function listenKeystrokes() {
     $(".title").live("keyup", onKeyUp);
     $(".title").live("keydown", onKeyDown);
 }
@@ -16,7 +16,7 @@ function onKeyUp(event) {
     }
     saveModifications(input);
 }
-function onKeyDown(event){
+function onKeyDown(event) {
     var input = $(event.target);
     var task = input.parents(".task");
     switch (event.keyCode) {
@@ -35,9 +35,9 @@ function onKeyDown(event){
 function saveModifications(input) {
     var key = input.siblings(".key").val();
     var title = input.val();
-    $.post("update", { "key" : key, "title": title });
+    $.post("update", { "key": key, "title": title });
 }
-function createTask(input){
+function createTask(input) {
     var caret = Caret(input);
     var priority = parseFloat(input.siblings(".priority").val());
     var left = input.val().substring(0, caret);
@@ -65,23 +65,23 @@ function createTask(input){
         newTask = task.next();
         newTask.find(".title").focus();
     }
-	newTask
+    newTask
 	    .find(".title")
 	    .val(text)
 	    ;
-	newTask
+    newTask
 	    .find(".priority")
 	    .val(priority);
-	Caret(newTask, 0);
-	this.createTaskCallback = function(task) {
-	    newTask
+    Caret(newTask, 0);
+    this.createTaskCallback = function(task) {
+        newTask
 	            .find(".key")
 	            .val(task.key);
-	    newTask
+        newTask
 	            .find(".priority")
 	            .val(task.priority);
     }
-	$.post("insert", { "title": text, "priority": priority }, this.createTaskCallback, "json");
+    $.post("insert", { "title": text, "priority": priority }, this.createTaskCallback, "json");
 }
 function calculatePriority(task, priority) {
     var nextPriority = parseFloat(task.find(".priority").val());
@@ -102,9 +102,11 @@ function deleteNextTask(input) {
     var caret = Caret(input);
     if (caret === input.val().length) {
         var nextInput = input.parents(".task").next().find(".title");
-        var nextText = nextInput.val();
-        deleteTask(nextInput);
-        appendText(input, nextText);
+        if (nextInput.length > 0) {
+            var nextText = nextInput.val();
+            deleteTask(nextInput);
+            appendText(input, nextText);
+        }
         return false;
     }
     return true;

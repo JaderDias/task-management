@@ -9,8 +9,7 @@
   <body>
 	<ul class="view">
 	{% for task in tasks %}
-		<li class="task">
-		  	<input type="hidden" class="key" value="{{ task.key.id }}" />
+		<li class="task" id="{{ task.key.id }}">
 		  	<input type="hidden" class="priority" value="{{ task.priority }}" />
 			<input type="text" class="title" value="{{ task.title|escape }}" />
 		</li>
@@ -18,7 +17,6 @@
 	</ul>
 	<div class="newTask">
 		<li class="task">
-		  	<input type="hidden" class="key" />
 		  	<input type="hidden" class="priority" />
 			<input type="text" class="title" />
 		</li>

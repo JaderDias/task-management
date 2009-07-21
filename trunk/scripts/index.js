@@ -1,6 +1,7 @@
 /// <reference path="jquery-1.3.2-vsdoc.js" />
 $(function() {
     listenKeystrokes();
+    $('.title').eq(0).focus();
 });
 function listenKeystrokes() {
     $(".title").live("keyup", onKeyUp);
@@ -20,7 +21,7 @@ function onKeyDown(event) {
     var task = input.parents(".task");
     switch (event.keyCode) {
         case 8: //backspace
-            return deletePreviousTask(input);
+            return backspaceKeystroke(input);
         case 38: //up
             task.prev().find(".title").focus();
             break;
@@ -28,13 +29,13 @@ function onKeyDown(event) {
             task.next().find(".title").focus();
             break;
         case 46: //delete
-            return deleteNextTask(input);
+            return deleteKeystroke(input);
     }
 }
 function saveModifications(input) {
-    var key = input.siblings(".key").val();
+    var id = input.parents(".task").attr("id");
     var title = input.val();
-    $.post("update", { "key": key, "title": title });
+    $.post("update", { "key": id, "title": title });
 }
 function createTask(input) {
     var caret = Caret(input);
@@ -43,17 +44,7 @@ function createTask(input) {
     var text = input.val().substring(caret);
     var task = input.parents(".task");
     var newTask
-    if (left == "") {
-        text = "";
-        var prevTask = task.prev();
-        if (prevTask.length > 0)
-            priority = calculatePriority(prevTask, priority);
-        else
-            priority /= 2;
-        task.before($(".newTask").html());
-        newTask = task.prev();
-        task.find(".title").focus();
-    } else {
+    if (text == "") {
         input.val(left);
         var nextTask = task.next();
         if (nextTask.length > 0)
@@ -63,22 +54,29 @@ function createTask(input) {
         task.after($(".newTask").html());
         newTask = task.next();
         newTask.find(".title").focus();
+    } else {
+        text = "";
+        var prevTask = task.prev();
+        if (prevTask.length > 0)
+            priority = calculatePriority(prevTask, priority);
+        else
+            priority /= 2;
+        task.before($(".newTask").html());
+        newTask = task.prev();
+        task.find(".title").focus();
     }
     newTask
 	    .find(".title")
-	    .val(text)
-	    ;
+	    .val(text);
     newTask
 	    .find(".priority")
 	    .val(priority);
     Caret(newTask, 0);
     this.createTaskCallback = function(task) {
         newTask
-	            .find(".key")
-	            .val(task.key);
-        newTask
-	            .find(".priority")
-	            .val(task.priority);
+            .attr("id", task.key)
+	        .find(".priority")
+	        .val(task.priority);
     }
     $.post("insert", { "title": text, "priority": priority }, this.createTaskCallback, "json");
 }
@@ -86,18 +84,21 @@ function calculatePriority(task, priority) {
     var nextPriority = parseFloat(task.find(".priority").val());
     return (priority + nextPriority) / 2;
 }
-function deletePreviousTask(input) {
+function backspaceKeystroke(input) {
     var caret = Caret(input);
     if (caret === 0) {
-        var text = input.val();
-        var previousInput = input.parents(".task").prev().find(".title");
-        deleteTask(input);
-        appendText(previousInput, text);
+        var previousTask = input.parents(".task").prev();
+        if (previousTask.length > 0) {
+            var text = input.val();
+            var previousInput = previousTask.find(".title");
+            deleteTask(input);
+            appendText(previousInput, text);
+        }
         return false;
     }
     return true;
 }
-function deleteNextTask(input) {
+function deleteKeystroke(input) {
     var caret = Caret(input);
     if (caret === input.val().length) {
         var nextInput = input.parents(".task").next().find(".title");
@@ -111,10 +112,9 @@ function deleteNextTask(input) {
     return true;
 }
 function deleteTask(input) {
-    var key = input.siblings(".key").val();
-    $.post("delete", { "key": key });
-    var row = input.parents(".task");
-    row.remove();
+    var id = input.parents(".task").attr("id");
+    $.post("delete", { "key": id });
+    $(id).remove();
 }
 function appendText(input, text) {
     var originalLength = input.val().length;

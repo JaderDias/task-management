@@ -1,6 +1,5 @@
 /// <reference path="jquery-1.3.2-vsdoc.js" />
-google.load("jquery", "1");
-google.setOnLoadCallback(function() {
+$(function() {
     listenKeystrokes();
 });
 function listenKeystrokes() {

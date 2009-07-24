@@ -114,7 +114,7 @@ function deleteKeystroke(input) {
 function deleteTask(input) {
     var id = input.parents(".task").attr("id");
     $.post("delete", { "key": id });
-    $(id).remove();
+    $("#" + id).remove();
 }
 function appendText(input, text) {
     var originalLength = input.val().length;

@@ -22,20 +22,31 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+class Tag(db.Model):
+  creator = db.UserProperty(auto_current_user_add=True)
+  creation = db.DateTimeProperty(auto_now_add=True)
+  name = db.StringProperty(multiline=False)
+  
+class Permission(db.Model):
+  creation = db.DateTimeProperty(auto_now_add=True)
+  target = db.UserProperty()
+  tag = db.ReferenceProperty(Tag)
+
 class Task(db.Model):
   creator = db.UserProperty(auto_current_user_add=True)
   creation = db.DateTimeProperty(auto_now_add=True)
   modifier = db.UserProperty(auto_current_user=True)
   modification = db.DateTimeProperty(auto_now=True)
-  identity = db.IntegerProperty()
-  version = db.IntegerProperty()
   priority = db.FloatProperty()
   title = db.StringProperty(multiline=False)
   description = db.StringProperty(multiline=True)
-  group = db.SelfReferenceProperty()
   due_date = db.DateTimeProperty()
   expectedTimeSpan = db.TimeProperty()
   is_done = db.BooleanProperty()
+
+class Tagging(db.Model):
+  tag = db.ReferenceProperty(Tag)
+  task = db.ReferenceProperty(Task)
 
 class MainPage(webapp.RequestHandler):
   def get(self):

@@ -1,7 +1,19 @@
 body {
   font-family: Verdana, Helvetica, sans-serif;
-  background-color: #DDDDDD;
+  background-color: White;
 }
 .newTask{
   display:none
+}
+li
+{
+    list-style-type:none;
+}
+ul 
+{
+    padding:0;
+}
+input
+{
+    border-style:none
 }

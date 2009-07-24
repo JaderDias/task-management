@@ -43,10 +43,7 @@ class Task(db.Model):
   due_date = db.DateTimeProperty()
   expectedTimeSpan = db.TimeProperty()
   is_done = db.BooleanProperty()
-
-class Tagging(db.Model):
   tag = db.ReferenceProperty(Tag)
-  task = db.ReferenceProperty(Task)
 
 class MainPage(webapp.RequestHandler):
   def get(self):

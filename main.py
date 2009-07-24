@@ -39,6 +39,10 @@ class Task(db.Model):
 
 class MainPage(webapp.RequestHandler):
   def get(self):
+    self.redirect('gadget');
+
+class Gadget(webapp.RequestHandler):
+  def get(self):
     user = users.get_current_user()
     tasks_query = Task.all().filter("creator =", user).order('priority')
     tasks = tasks_query.fetch(1000)
@@ -62,22 +66,12 @@ class MainPage(webapp.RequestHandler):
       'url_linktext': url_linktext
       }
 
-    path = os.path.join(os.path.dirname(__file__), 'index.html')
+    path = os.path.join(os.path.dirname(__file__), 'gadget.html')
     self.response.out.write(template.render(path, template_values))
 
-class Gadget(webapp.RequestHandler):
+class GadgetXML(webapp.RequestHandler):
   def get(self):
-    user = users.get_current_user()
-    if user:
-      url = users.create_logout_url(self.request.uri)
-      url_linktext = 'Logout'
-    else:
-      url = users.create_login_url(self.request.uri)
-      url_linktext = 'Login'
-    template_values = {
-      'url': url,
-      'url_linktext': url_linktext
-      }
+    template_values = {}
     path = os.path.join(os.path.dirname(__file__), 'gadget.xml')
     self.response.out.write(template.render(path, template_values))
 
@@ -109,7 +103,8 @@ class Delete(webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/gadget.xml', Gadget),
+                                      ('/gadget', Gadget),
+                                      ('/gadget.xml', GadgetXML),
                                       ('/insert', Insert),
                                       ('/delete', Delete),
                                       ('/update', Update)],

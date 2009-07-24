@@ -15,5 +15,6 @@ ul
 }
 input
 {
-    border-style:none
+    border-style:none;
+    background-color:White;
 }

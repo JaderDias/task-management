@@ -3,7 +3,7 @@
   <ModulePrefs title="hello world example" />
   <Content type="html">
 <![CDATA[ 
-<iframe src="http://shared-tasks.appspot.com/" frameborder="0" width="100%" height="100%"></iframe>
+<iframe src="http://shared-tasks.appspot.com/gadget" frameborder="0" width="100%" height="100%"></iframe>
 ]]>
   </Content>
 </Module>

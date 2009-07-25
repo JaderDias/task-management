@@ -2,9 +2,6 @@ body {
   font-family: Verdana, Helvetica, sans-serif;
   background-color: White;
 }
-.newTask{
-  display:none
-}
 li
 {
     list-style-type:none;
@@ -17,4 +14,17 @@ input
 {
     border-style:none;
     background-color:White;
+}
+.checkbox
+{
+    background:transparent url(../images/sprite.png) no-repeat -16px -2px;
+    height:16px;
+    width:16px;
+    margin-top:1px;
+    cursor:pointer;
+    float:left;
+}
+.hidden
+{
+  display:none
 }

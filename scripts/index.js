@@ -1,6 +1,19 @@
 /// <reference path="jquery-1.3.2-vsdoc.js" />
 $(function() {
     listenKeystrokes();
+    $('.task').hover(function() {
+        $('.hovered').removeClass('hovered');
+        $(this).addClass('hovered');
+    }, function() {
+        $(this).removeClass('hovered');
+    });
+    $('.title').hover(function() {
+        var task = $(this).parents('.task');
+        if(!task.hasClass('hovered')){
+            $('.hovered').removeClass('hovered');
+            task.addClass('hovered');
+        }
+    });
     $('.title').eq(0).focus();
 });
 function listenKeystrokes() {

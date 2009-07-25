@@ -1,30 +1,41 @@
-body {
-  font-family: Verdana, Helvetica, sans-serif;
-  background-color: White;
+body
+{
+    font-family: Verdana, Helvetica, sans-serif;
+    background-color: White;
 }
 li
 {
-    list-style-type:none;
+    list-style-type: none;
 }
-ul 
+ul
 {
-    padding:0;
+    padding: 0;
 }
 input
 {
-    border-style:none;
-    background-color:White;
+    border-style: none;
+    background-color: White;
 }
 .checkbox
 {
-    background:transparent url(../images/sprite.png) no-repeat -16px -2px;
-    height:16px;
-    width:16px;
-    margin-top:1px;
-    cursor:pointer;
-    float:left;
+    background: transparent url(../images/sprite.png) no-repeat -16px -2px;
+    height: 16px;
+    width: 16px;
+    margin-top: 1px;
+    cursor: pointer;
+    float: left;
 }
 .hidden
 {
-  display:none
+    display: none;
+}
+.showDetails
+{
+    height: 18px;
+    width: 10px;
+    float: left;
+}
+.hovered .showDetails
+{
+    background: transparent url(../images/sprite.png) repeat-y -254px 0px;
 }

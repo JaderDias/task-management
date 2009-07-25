@@ -10,13 +10,15 @@
 	<ul class="view">
 	{% for task in tasks %}
 		<li class="task" id="{{ task.key.id }}">
+		    <div class="checkbox"></div>
 		  	<input type="hidden" class="priority" value="{{ task.priority }}" />
 			<input type="text" class="title" value="{{ task.title|escape }}" />
 		</li>
 	{% endfor %}
 	</ul>
-	<div class="newTask">
+	<div id="newTask" class="hidden">
 		<li class="task">
+		    <div class="checkbox"></div>
 		  	<input type="hidden" class="priority" />
 			<input type="text" class="title" />
 		</li>

@@ -51,7 +51,7 @@ function createTask(input) {
             priority = calculatePriority(nextTask, priority);
         else
             priority = -1;
-        task.after($(".newTask").html());
+        task.after($("#newTask").html());
         newTask = task.next();
         newTask.find(".title").focus();
     } else {
@@ -61,7 +61,7 @@ function createTask(input) {
             priority = calculatePriority(prevTask, priority);
         else
             priority /= 2;
-        task.before($(".newTask").html());
+        task.before($("#newTask").html());
         newTask = task.prev();
         task.find(".title").focus();
     }
